@@ -1,0 +1,58 @@
+{
+  "name": "@haribodev/aws-ec2-profiles",
+  "description": "Retrieves AWS EC2 instances and connect to them using SSH. Update security group ingress rules with your new public IP.",
+  "version": "1.0.0",
+  "author": "HariboDev",
+  "bin": {
+    "aep": "./bin/run"
+  },
+  "bugs": "https://github.com/HariboDev/aws-ec2-profiles/issues",
+  "dependencies": {
+    "@oclif/command": "^1.7.0",
+    "@oclif/config": "^1.16.0",
+    "@oclif/plugin-help": "^3.1.0",
+    "aws-sdk": "^2.791.0",
+    "chalk": "^4.1.0",
+    "cli-table": "^0.3.1",
+    "cli-ux": "^5.5.1",
+    "fs": "0.0.1-security",
+    "oclif": "^1.16.1",
+    "path": "^0.12.7",
+    "public-ip": "^4.0.2"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.23.0",
+    "globby": "^10.0.2",
+    "rimraf": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/HariboDev/aws-ec2-profiles",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "aep",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "HariboDev/aws-ec2-profiles",
+  "scripts": {
+    "postpack": "rimraf oclif.manifest.json",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md",
+    "postinstall": "node ./src/postinstall.js"
+  }
+}
