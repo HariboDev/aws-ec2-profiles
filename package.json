@@ -18,7 +18,8 @@
     "fs": "0.0.1-security",
     "oclif": "^1.16.1",
     "path": "^0.12.7",
-    "public-ip": "^4.0.2"
+    "public-ip": "^4.0.2",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.23.0",

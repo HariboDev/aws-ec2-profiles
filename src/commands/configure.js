@@ -1,28 +1,31 @@
 const { Command } = require('@oclif/command')
 const fs = require('fs')
 const path = require('path')
+const shell = require('shelljs');
 const chalk = require('chalk')
 const { cli } = require('cli-ux')
 const publicIp = require('public-ip')
 
 class ConfigureCommand extends Command {
     async run() {
-        await this.createScripts()
-        await this.createConfigFile()
-        await this.createDataFile()
+        if (await this.createDirectories()) {
+            await this.createConfigFile()
+            await this.createDataFile()
+            await this.createScripts()
+        }
     }
 
-    async createScripts() {
-        var pythonFile = path.join(this.config.configDir, 'ssh.py')
-        var pythonScript = `import subprocess\nimport sys\n\ntry:\n   subprocess.call("start ssh -i " + sys.argv[1] + "/" + sys.argv[2] + ".pem " + sys.argv[3] + "@" + sys.argv[4] + "", shell=True)\nexcept Exception as e:\n   print(e)`
-
-        try {
-            fs.writeFileSync(pythonFile, pythonScript)
-            console.log(`${chalk.green('[INFO]')} Successfully created ssh script`)
-        } catch (error) {
-            console.log(`${chalk.red('[ERROR]')} Unable to create ssh script`)
-            console.log(`${chalk.red('[REASON]')} ${error}`)
-            return
+    async createDirectories() {
+        if (!fs.existsSync(this.config.configDir)) {
+            try {
+                shell.mkdir('-p', this.config.configDir)
+                console.log(`${chalk.green('[INFO]')} Package directory created successfully`)
+                return true
+            } catch (error) {
+                console.log(`${chalk.red('[ERROR]')} Unable to create package directory`)
+                console.log(`${chalk.red('[REASON]')} ${error}`)
+                return false
+            }
         }
     }
 
@@ -33,7 +36,7 @@ class ConfigureCommand extends Command {
             console.log(`${chalk.green('[INFO]')} Config directory located`)
         } else {
             try {
-                fs.mkdirSync(this.config.configDir)
+                shell.mkdir('-p', this.config.configDir)
                 console.log(`${chalk.green('[INFO]')} Config directory created successfully`)
             } catch (error) {
                 console.log(`${chalk.red('[ERROR]')} Unable to create config directory`)
@@ -92,7 +95,7 @@ class ConfigureCommand extends Command {
             console.log(`${chalk.green('[INFO]')} Data directory located`)
         } else {
             try {
-                fs.mkdirSync(this.config.dataDir)
+                shell.mkdir('-p', this.config.dataDir)
                 console.log(`${chalk.green('[INFO]')} Data directory created successfully`)
             } catch (error) {
                 console.log(`${chalk.red('[ERROR]')} Unable to create data directory`)
@@ -104,7 +107,7 @@ class ConfigureCommand extends Command {
         var publicIP
 
         try {
-            publicIP = await publicIp.v4() 
+            publicIP = await publicIp.v4()
         } catch (error) {
             console.log(`${chalk.red('[ERROR]')} Unable to get public IP`)
             console.log(`${chalk.red('[REASON]')} ${error}`)
@@ -120,6 +123,20 @@ class ConfigureCommand extends Command {
             console.log(`${chalk.green('[INFO]')} Successfully saved data to data file`)
         } catch (error) {
             console.log(`${chalk.red('[ERROR]')} Unable to save data to data file`)
+            console.log(`${chalk.red('[REASON]')} ${error}`)
+            return
+        }
+    }
+
+    async createScripts() {
+        var pythonFile = path.join(this.config.configDir, 'ssh.py')
+        var pythonScript = `import subprocess\nimport sys\n\ntry:\n   subprocess.call("start ssh -i " + sys.argv[1] + "/" + sys.argv[2] + ".pem " + sys.argv[3] + "@" + sys.argv[4] + "", shell=True)\nexcept Exception as e:\n   print(e)`
+
+        try {
+            fs.writeFileSync(pythonFile, pythonScript)
+            console.log(`${chalk.green('[INFO]')} Successfully created ssh script`)
+        } catch (error) {
+            console.log(`${chalk.red('[ERROR]')} Unable to create ssh script`)
             console.log(`${chalk.red('[REASON]')} ${error}`)
             return
         }
