@@ -34,14 +34,11 @@
     </tr>
 </table>
 
-## v1.1.1 - 18th December 2020
+## v1.2.0 - 18th December 2020
 
 <ul>
     <li style="color:green">
-        Added <a href="https://github.com/HariboDev/aws-ec2-profiles/blob/master/docs/CHANGELOG.md" style="color:green">CHANGELOG.md</a>
-    </li>
-    <li style="color:green">
-        Added <a href="https://github.com/HariboDev/aws-ec2-profiles/tree/master/docs" style="color:green">docs folder</a>
+        Added <a href="https://github.com/HariboDev/aws-ec2-profiles/blob/master/CHANGELOG.md" style="color:green">CHANGELOG.md</a>
     </li>
 </ul>
 
