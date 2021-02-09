@@ -8,7 +8,6 @@ const fs = require('fs')
 class UpdateCommand extends Command {
   async run() {
     const { flags } = this.parse(UpdateCommand)
-    console.log(flags)
 
     if ("force" in flags) {
       if (flags.force.length === 2) {
@@ -48,6 +47,7 @@ class UpdateCommand extends Command {
       } else {
         console.log(`${chalk.red('[ERROR]')} Invalid arguments supplied to --force flag`)
         console.log(`${chalk.red('[USAGE]')} aep update --force FROM_IP TO_IP`)
+        return
       }
     } else {
       Check(path.join(this.config.dataDir, 'data.json'))
