@@ -8,53 +8,95 @@ const fs = require('fs')
 class UpdateCommand extends Command {
   async run() {
     const { flags } = this.parse(UpdateCommand)
+    console.log(flags)
 
-    Check(path.join(this.config.dataDir, 'data.json'))
-      .then(async response => {
-        if (response.changed) {
-          console.log(`${chalk.green('[INFO]')} IP change detected`)
-          console.log(`${chalk.green('[INFO]')} Old IP: ${response.oldIP}`)
-          console.log(`${chalk.green('[INFO]')} Current IP: ${response.currentIP}`)
+    if ("force" in flags) {
+      if (flags.force.length === 2) {
+        console.log(`${chalk.green('[INFO]')} Force changing IP`)
+        console.log(`${chalk.green('[INFO]')} From: ${flags.force[0]}`)
+        console.log(`${chalk.green('[INFO]')} To: ${flags.force[1]}`)
 
-          try {
-            var configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
+        try {
+          var configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
 
-            for (let account of configData.accountCredentials) {
-              console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)
+          for (let account of configData.accountCredentials) {
+            console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)
 
-              if (flags.region == 'all') {
-                var regions = ['us-east-1', 'us-east-2', 'us-west-1',
-                  'us-west-2', 'ap-south-1',
-                  'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
-                  'ap-southeast-2', 'ca-central-1', 'eu-central-1',
-                  'eu-west-1', 'eu-west-2', 'eu-west-3',
-                  'eu-north-1', 'sa-east-1']
+            if (flags.region == 'all') {
+              var regions = ['us-east-1', 'us-east-2', 'us-west-1',
+                'us-west-2', 'ap-south-1',
+                'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
+                'ap-southeast-2', 'ca-central-1', 'eu-central-1',
+                'eu-west-1', 'eu-west-2', 'eu-west-3',
+                'eu-north-1', 'sa-east-1']
 
-                for (let region of regions) {
-                  await this.checkRegion(region, response.oldIP, response.currentIP, account)
-                }
-              } else {
-                for (let region of flags.region) {
-                  await this.checkRegion(region, response.oldIP, response.currentIP, account)
-                }
+              for (let region of regions) {
+                await this.checkRegion(region, flags.force[0], flags.force[1], account)
+              }
+            } else {
+              for (let region of flags.region) {
+                await this.checkRegion(region, flags.force[0], flags.force[1], account)
               }
             }
-          } catch (error) {
-            console.log(`${chalk.red('[ERROR]')} Unable to read config file`)
-            console.log(`${chalk.red('[REASON]')} ${error}`)
-            return
           }
-
-        } else {
-          console.log(`${chalk.green('[INFO]')} No IP change detected`)
-          console.log(`${chalk.green('[INFO]')} Current IP: ${response.currentIP}`)
+        } catch (error) {
+          console.log(`${chalk.red('[ERROR]')} Unable to read config file`)
+          console.log(`${chalk.red('[REASON]')} ${error}`)
+          return
         }
-      })
-      .catch(error => {
-        console.log(`${chalk.red('[ERROR]')} ${error.errorSummary}`)
-        console.log(`${chalk.red('[REASON]')} ${error.errorMessage}`)
-        return
-      })
+
+      } else {
+        console.log(`${chalk.red('[ERROR]')} Invalid arguments supplied to --force flag`)
+        console.log(`${chalk.red('[USAGE]')} aep update --force FROM_IP TO_IP`)
+      }
+    } else {
+      Check(path.join(this.config.dataDir, 'data.json'))
+        .then(async response => {
+          if (response.changed) {
+            console.log(`${chalk.green('[INFO]')} IP change detected`)
+            console.log(`${chalk.green('[INFO]')} Old IP: ${response.oldIP}`)
+            console.log(`${chalk.green('[INFO]')} Current IP: ${response.currentIP}`)
+
+            try {
+              var configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
+
+              for (let account of configData.accountCredentials) {
+                console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)
+
+                if (flags.region == 'all') {
+                  var regions = ['us-east-1', 'us-east-2', 'us-west-1',
+                    'us-west-2', 'ap-south-1',
+                    'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
+                    'ap-southeast-2', 'ca-central-1', 'eu-central-1',
+                    'eu-west-1', 'eu-west-2', 'eu-west-3',
+                    'eu-north-1', 'sa-east-1']
+
+                  for (let region of regions) {
+                    await this.checkRegion(region, response.oldIP, response.currentIP, account)
+                  }
+                } else {
+                  for (let region of flags.region) {
+                    await this.checkRegion(region, response.oldIP, response.currentIP, account)
+                  }
+                }
+              }
+            } catch (error) {
+              console.log(`${chalk.red('[ERROR]')} Unable to read config file`)
+              console.log(`${chalk.red('[REASON]')} ${error}`)
+              return
+            }
+
+          } else {
+            console.log(`${chalk.green('[INFO]')} No IP change detected`)
+            console.log(`${chalk.green('[INFO]')} Current IP: ${response.currentIP}`)
+          }
+        })
+        .catch(error => {
+          console.log(`${chalk.red('[ERROR]')} ${error.errorSummary}`)
+          console.log(`${chalk.red('[REASON]')} ${error.errorMessage}`)
+          return
+        })
+    }
   }
 
   async checkRegion(region, oldIP, currentIP, account) {
@@ -186,6 +228,12 @@ UpdateCommand.flags = {
       'eu-north-1',
       'sa-east-1'
     ]
+  }),
+  force: flags.string({
+    char: 'f',
+    description: 'Force change of a rule from one IP to another. This doesn\'t have to be your IP',
+    required: false,
+    multiple: true
   })
 }
 
