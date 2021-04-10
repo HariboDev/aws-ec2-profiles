@@ -146,7 +146,7 @@ Display registered AWS accounts
 AccountsCommand.flags = {
     detail: flags.boolean({
         char: 'd',
-        description: 'Show extra instance details',
+        description: 'Show extra account details',
         default: false,
     })
 }

@@ -35,9 +35,15 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://www.haribo.dev",
+  "homepage": "https://www.haribodev.uk",
   "keywords": [
-    "oclif"
+    "cli",
+    "ssh",
+    "npm",
+    "aws",
+    "ec2",
+    "ip",
+    "security-groups"
   ],
   "license": "MIT",
   "main": "src/index.js",
@@ -52,7 +58,6 @@
   "scripts": {
     "postpack": "rimraf oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md",
     "postinstall": "node ./src/postinstall.js"
   }
