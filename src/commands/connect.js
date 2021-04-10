@@ -42,8 +42,12 @@ class ConnectCommand extends Command {
         } else if (instanceToConnect['Accessible'] == false) {
             console.log(`${chalk.red('[ERROR]')} Instance is not accessible`)
         } else {
+            var username
+
             if (flags.username) {
-                instanceToConnect['Username'] = flags.username
+                username = flags.username
+            } else {
+                username = instanceToConnect['Username']
             }
 
             var directory
@@ -54,11 +58,19 @@ class ConnectCommand extends Command {
                 directory = '~/' + configData['pem Directory']
             }
 
-            console.log(`${chalk.green('[INFO]')} Connecting to "${instanceToConnect['Name']}" as "${instanceToConnect['Username']}" at ""${instanceToConnect['Address']}:22`)
+            var key
+
+            if (flags.key) {
+                key = flags.key
+            } else {
+                key = instanceToConnect['Key Pair'] + '.pem'
+            }
+
+            console.log(`${chalk.green('[INFO]')} Connecting to "${instanceToConnect['Name']}" as "${username}" at "${instanceToConnect['Address']}:22"`)
             console.log(`${chalk.green('[INFO]')} If these details are incorrect, execute "aep list" and try again`)
             console.log(`${chalk.green('[INFO]')} Attempting to connect...`)
 
-            const pythonProcess = spawn('python', [path.join(this.config.configDir, 'ssh.py'), directory, instanceToConnect['Key Pair'], instanceToConnect['Username'], instanceToConnect['Address']])
+            const pythonProcess = spawn('python', [path.join(this.config.configDir, 'ssh.py'), directory, key, username, instanceToConnect['Address']])
 
             pythonProcess.stdout.on('data', function(data) {
                 if (data) {
@@ -79,7 +91,8 @@ ConnectCommand.flags = {
     name: flags.string({ char: 'n', description: 'Instance name' }),
     address: flags.string({ char: 'a', description: 'Instance Address' }),
     username: flags.string({ char: 'u', description: 'Override connection username' }),
-    directory: flags.string({ char: 'd', description: 'Override pem file directory' })
+    directory: flags.string({ char: 'd', description: 'Override pem file directory' }),
+    key: flags.string({ char: 'k', description: 'Override pem file name' })
 }
 
 module.exports = ConnectCommand

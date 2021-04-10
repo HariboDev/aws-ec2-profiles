@@ -26,6 +26,8 @@ class ConfigureCommand extends Command {
                 console.log(`${chalk.red('[REASON]')} ${error}`)
                 return false
             }
+        } else {
+            return true
         }
     }
 
@@ -130,7 +132,7 @@ class ConfigureCommand extends Command {
 
     async createScripts() {
         var pythonFile = path.join(this.config.configDir, 'ssh.py')
-        var pythonScript = `import subprocess\nimport sys\n\ntry:\n   subprocess.call("start ssh -i " + sys.argv[1] + "/" + sys.argv[2] + ".pem " + sys.argv[3] + "@" + sys.argv[4] + "", shell=True)\nexcept Exception as e:\n   print(e)`
+        var pythonScript = `import subprocess\nimport sys\n\ntry:\n   subprocess.call("start ssh -i " + sys.argv[1] + "/" + sys.argv[2] + " " + sys.argv[3] + "@" + sys.argv[4] + "", shell=True)\nexcept Exception as e:\n   print(e)`
 
         try {
             fs.writeFileSync(pythonFile, pythonScript)
@@ -144,7 +146,7 @@ class ConfigureCommand extends Command {
 }
 
 ConfigureCommand.description = `Configure the CLI
-Add accounts and customise the CLI tool
+Add accounts and customise the CLI tool. This command should be used after package updates.
 `
 
 module.exports = ConfigureCommand
