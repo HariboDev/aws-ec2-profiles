@@ -94,7 +94,7 @@ Gathers up to date EC2 instance data and displays summaries in a table
 ListCommand.flags = {
     region: flags.string({
         char: 'r',
-        description: 'Only update security groups in a specific region(s)',
+        description: 'Only get instances in a specific region(s)',
         multiple: true,
         default: 'all',
         options: [
