@@ -17,7 +17,7 @@ $ npm install -g @haribodev/aws-ec2-profiles
 $ aep COMMAND
 running command...
 $ aep (-v|--version|version)
-@haribodev/aws-ec2-profiles/1.3.5 win32-x64 node-v12.16.3
+@haribodev/aws-ec2-profiles/1.3.6 win32-x64 node-v12.16.3
 $ aep --help [COMMAND]
 USAGE
   $ aep COMMAND
@@ -52,7 +52,7 @@ DESCRIPTION
   Display registered AWS accounts
 ```
 
-_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.5/src\commands\accounts.js)_
+_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.6/src\commands\accounts.js)_
 
 ## `aep configure`
 
@@ -66,7 +66,7 @@ DESCRIPTION
   Add accounts and customise the CLI tool. This command should be used after package updates.
 ```
 
-_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.5/src\commands\configure.js)_
+_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.6/src\commands\configure.js)_
 
 ## `aep connect`
 
@@ -89,7 +89,7 @@ DESCRIPTION
   Ability to override username and/or pem directory
 ```
 
-_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.5/src\commands\connect.js)_
+_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.6/src\commands\connect.js)_
 
 ## `aep help [COMMAND]`
 
@@ -126,7 +126,7 @@ OPTIONS
   -r, 
   --region=us-east-1|us-east-2|us-west-1|us-west-2|ap-south-1|ap-northeast-1|ap-northeast-2|ap-southeast-1|ap-southeast-
   2|ca-central-1|eu-central-1|eu-west-1|eu-west-2|eu-west-3|eu-north-1|sa-east-1
-      [default: all] Only update security groups in a specific region(s)
+      [default: all] Only get instances in a specific region(s)
 
   -s, --state=pending|running|stopping|stopped|shutting-down|terminated
       [default: all] Only get instances of in a specific state(s)
@@ -135,7 +135,7 @@ DESCRIPTION
   Gathers up to date EC2 instance data and displays summaries in a table
 ```
 
-_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.5/src\commands\list.js)_
+_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.6/src\commands\list.js)_
 
 ## `aep update`
 
@@ -158,5 +158,5 @@ DESCRIPTION
   Checks if your public IP has changed and updates relevant AWS security groups
 ```
 
-_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.5/src\commands\update.js)_
+_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v1.3.6/src\commands\update.js)_
 <!-- commandsstop -->
