@@ -16,6 +16,12 @@ function Get(flags, config) {
             reject(error)
         }
 
+        if (!("accountCredentials" in configData)) {
+            console.log(`${chalk.red('[ERROR]')} No accounts registered`)
+            console.log(`${chalk.red('[REMEDY]')} Execute 'aep accounts add' to register a new account`)
+            return
+        }
+
         if (flags.region == 'all') {
             flags.region = ['us-east-1', 'us-east-2', 'us-west-1',
                 'us-west-2', 'ap-south-1',

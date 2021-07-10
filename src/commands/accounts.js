@@ -1,4 +1,4 @@
-const { Command, flags, args } = require('@oclif/command')
+const { Command, flags } = require('@oclif/command')
 const Table = require('cli-table')
 const chalk = require('chalk')
 const fs = require('fs')
@@ -14,6 +14,7 @@ class AccountsCommand extends Command {
         try {
             configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
             console.log(`${chalk.green('[INFO]')} Config file located`)
+            if (!("accountCredentials" in configData)) configData.accountCredentials = []
         } catch (error) {
             console.log(`${chalk.red('[ERROR]')} Unable to locate config file`)
             console.log(`${chalk.red('[REASON]')} ${error}`)
@@ -84,17 +85,17 @@ class AccountsCommand extends Command {
 
             var index = await getIndex()
 
-            configData.accountCredentials[index].awsAccountName = await cli.prompt(`AWS Account Name [${configData.accountCredentials[index].awsAccountName}]`, { required: false }) || configData.accountCredentials[index].awsAccountName
-            configData.accountCredentials[index].awsAccessKey = await cli.prompt(`AWS Access Key [${configData.accountCredentials[index].awsAccessKey}]`, { required: false }) || configData.accountCredentials[index].awsAccessKey
+            configData.accountCredentials[index].awsAccountName = await cli.prompt(`AWS Account Name [${configData.accountCredentials[index].awsAccountName}]`, { required: true }) || configData.accountCredentials[index].awsAccountName
+            configData.accountCredentials[index].awsAccessKey = await cli.prompt(`AWS Access Key [${configData.accountCredentials[index].awsAccessKey}]`, { required: true }) || configData.accountCredentials[index].awsAccessKey
 
             var secret = configData.accountCredentials[index].awsSecretAccessKey
 
             if (flags.detail) {
-                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${secret}]`, { required: false, type: 'mask' }) || secret
+                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${secret}]`, { required: true, type: 'mask' }) || secret
             } else {
                 var mask = secret.substring(0, secret.length - 4).replace(/./g, "*")
                 var lastFour = secret.substring(secret.length - 4, secret.length)
-                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${mask + lastFour}]`, { required: false, type: 'mask' }) || secret
+                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${mask + lastFour}]`, { required: true, type: 'mask' }) || secret
             }
 
             try {

@@ -11,7 +11,6 @@ class ConfigureCommand extends Command {
         if (await this.createDirectories()) {
             await this.createConfigFile()
             await this.createDataFile()
-            await this.createScripts()
         }
     }
 
@@ -60,27 +59,7 @@ class ConfigureCommand extends Command {
 
         var newConfigData = {}
 
-        newConfigData['pem Directory'] = await cli.prompt('Default .pem directory [Downloads]', { required: false }) || 'Downloads'
-
-        var accountCredentials = []
-
-        var addAccount = async () => {
-            accountCredentials.push({
-                awsAccountName: await cli.prompt('AWS Account Name'),
-                awsAccessKey: await cli.prompt('AWS Access Key'),
-                awsSecretAccessKey: await cli.prompt('AWS Secret Access Key', { type: 'mask' })
-            })
-
-            var addAnotherAccount = await cli.confirm('Would you like to add another account [y/n]')
-
-            if (addAnotherAccount) {
-                await addAccount()
-            }
-        }
-
-        await addAccount()
-
-        newConfigData.accountCredentials = accountCredentials
+        newConfigData['pem Directory'] = await cli.prompt(`Default .pem directory [${path.join(process.env.HOME, "/.ssh")}]`, { required: false }) || path.join(process.env.HOME, "/.ssh")
 
         try {
             fs.writeFileSync(path.join(this.config.configDir, 'config.json'), JSON.stringify(newConfigData))
@@ -125,20 +104,6 @@ class ConfigureCommand extends Command {
             console.log(`${chalk.green('[INFO]')} Successfully saved data to data file`)
         } catch (error) {
             console.log(`${chalk.red('[ERROR]')} Unable to save data to data file`)
-            console.log(`${chalk.red('[REASON]')} ${error}`)
-            return
-        }
-    }
-
-    async createScripts() {
-        var pythonFile = path.join(this.config.configDir, 'ssh.py')
-        var pythonScript = `import subprocess\nimport sys\n\ntry:\n   subprocess.call("start ssh -i " + sys.argv[1] + "/" + sys.argv[2] + " " + sys.argv[3] + "@" + sys.argv[4] + "", shell=True)\nexcept Exception as e:\n   print(e)`
-
-        try {
-            fs.writeFileSync(pythonFile, pythonScript)
-            console.log(`${chalk.green('[INFO]')} Successfully created ssh script`)
-        } catch (error) {
-            console.log(`${chalk.red('[ERROR]')} Unable to create ssh script`)
             console.log(`${chalk.red('[REASON]')} ${error}`)
             return
         }

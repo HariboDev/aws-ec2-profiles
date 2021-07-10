@@ -17,6 +17,7 @@ class UpdateCommand extends Command {
 
         try {
           var configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
+          if (!("accountCredentials") in configData) configData.accountCredentials = []
 
           for (let account of configData.accountCredentials) {
             console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)
@@ -59,6 +60,7 @@ class UpdateCommand extends Command {
 
             try {
               var configData = JSON.parse(fs.readFileSync(path.join(this.config.configDir, 'config.json')))
+              if (!("accountCredentials") in configData) configData.accountCredentials = []
 
               for (let account of configData.accountCredentials) {
                 console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)

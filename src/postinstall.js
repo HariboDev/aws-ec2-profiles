@@ -1,5 +1,3 @@
-const fs = require('fs')
-const path = require('path')
 const Table = require('cli-table')
 const chalk = require('chalk')
 const ConfigureCommand = require('./commands/configure')

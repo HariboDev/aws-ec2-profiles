@@ -1,9 +1,9 @@
 const { Command, flags } = require('@oclif/command')
 const fs = require('fs')
 const path = require('path')
+const { cli } = require('cli-ux')
 const chalk = require('chalk')
-const spawn = require('child_process').spawn
-const Get = require('../get')
+const SSH = require('../ssh')
 
 class ConnectCommand extends Command {
     async run() {
@@ -50,35 +50,58 @@ class ConnectCommand extends Command {
                 username = instanceToConnect['Username']
             }
 
-            var directory
-
-            if (flags.directory) {
-                directory = flags.directory
+            if (flags.password) {
+                var password = await cli.prompt(`Enter password for ${username}@${instanceToConnect['Address']}:22`, { required: true, type: 'hide' })
             } else {
-                directory = '~/' + configData['pem Directory']
-            }
+                var directory
 
-            var key
-
-            if (flags.key) {
-                key = flags.key
-            } else {
-                key = instanceToConnect['Key Pair'] + '.pem'
-            }
-
-            console.log(`${chalk.green('[INFO]')} Connecting to "${instanceToConnect['Name']}" as "${username}" at "${instanceToConnect['Address']}:22"`)
-            console.log(`${chalk.green('[INFO]')} If these details are incorrect, execute "aep list" and try again`)
-            console.log(`${chalk.green('[INFO]')} Attempting to connect...`)
-
-            const pythonProcess = spawn('python', [path.join(this.config.configDir, 'ssh.py'), directory, key, username, instanceToConnect['Address']])
-
-            pythonProcess.stdout.on('data', function(data) {
-                if (data) {
-                    console.log(`${chalk.red('[ERROR]')} Failed to connect via SSH. To resolve, execute: "aep list" and try again`)
-                    console.log(`${chalk.red('[REASON]')} ${data.toString()}`)
+                if (flags.directory) {
+                    directory = flags.directory
+                } else {
+                    directory = '~/' + configData['pem Directory']
                 }
-            })
+
+                var key
+
+                if (flags.key) {
+                    key = await this.resolveHome(directory + "/" + flags.key)
+                } else {
+                    key = await this.resolveHome(directory + "/" + instanceToConnect['Key Pair'])
+                }
+            }
+
+            console.log('')
+            console.log(`${chalk.green('[INFO]')} Connecting to "${instanceToConnect['Name']}" as "${username}" at "${instanceToConnect['Address']}:22"`)
+            console.log(`${chalk.green('[INFO]')} If these details are incorrect, execute "aep list" to update instance details and try again`)
+            console.log(`${chalk.green('[INFO]')} Attempting to connect...`)
+            console.log('')
+
+            await SSH(instanceToConnect['Address'], username, key, password)
         }
+    }
+
+    async resolveHome(filepath) {
+        var validFileExtensions = [".pem", ".ppk"]
+
+        if (filepath[0] === '~') {
+            filepath = path.join(process.env.HOME, filepath.slice(1));
+        }
+
+        if (validFileExtensions.includes(filepath.slice(-4))) {
+            if (fs.existsSync(filepath)) {
+                console.log(filepath)
+                return filepath
+            }
+        } else {
+            for (var extension of validFileExtensions) {
+                if (fs.existsSync(filepath + extension)) {
+                    return filepath + extension
+                }
+            }
+        }
+
+        console.log(`${chalk.red('[ERROR]')} Could not find key file: ${filepath}`)
+        process.exit()
     }
 }
 
@@ -92,7 +115,8 @@ ConnectCommand.flags = {
     address: flags.string({ char: 'a', description: 'Instance Address' }),
     username: flags.string({ char: 'u', description: 'Override connection username' }),
     directory: flags.string({ char: 'd', description: 'Override pem file directory' }),
-    key: flags.string({ char: 'k', description: 'Override pem file name' })
+    key: flags.string({ char: 'k', description: 'Override pem file name' }),
+    password: flags.boolean({ char: 'p', description: 'Ask for password' })
 }
 
 module.exports = ConnectCommand
