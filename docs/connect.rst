@@ -90,7 +90,7 @@ Examples
 
   .. code:: console
 
-    $ aep connect --name example_server -u example_user
+    $ aep connect --name example_server --username example_user --password
     Enter password for pi@123.456.789.123:22: MyPassword
 
     [INFO] Connecting to "example_server" as "example_user" at "123.456.789.123:22"
