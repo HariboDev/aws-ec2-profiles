@@ -14,7 +14,7 @@ The accounts command follows the following format:
 
   $ aep accounts [ARGUMENTS] [OPTIONS]
 
-:Note:
+.. note::
   This command can also take a flag: ``--detail`` or ``-d``. This flag will
   unmask the Secret Access Key and show it as plaintext in the console.
 
@@ -115,7 +115,7 @@ Usage
 At this point, you will be prompted to enter the index number of the account
 you wish to modify. Only a valid index will be accepted.
 
-:Note:
+.. note::
   Index for accounts begin at 0, not 1.
 
 You will then be prompted to enter an updated:
@@ -143,7 +143,7 @@ You will then be prompted to enter an updated:
     by AWS.
   * Example: ``wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY``
 
-:Note:
+.. note::
   If you press enter while editing a certain field, the value will not change.
   Instead, the existing value will be used.
 
@@ -195,7 +195,7 @@ Usage
 At this point, you will be prompted to enter the index number of the account
 you wish to deregister from the CLI. Only a valid index will be accepted.
 
-:Note:
+.. note::
   Index for accounts begin at 0, not 1.
 
 Options

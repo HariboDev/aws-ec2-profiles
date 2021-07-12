@@ -1,0 +1,13 @@
+@import './furo.css';
+
+.latest {
+  color: green;
+}
+
+.deprecated {
+  color: red;
+}
+
+.toc-tree li.scroll-current>.reference {
+  font-weight: normal !important;
+}

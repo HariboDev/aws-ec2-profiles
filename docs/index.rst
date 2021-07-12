@@ -29,9 +29,10 @@
    uninstall
 
 .. toctree::
-   :caption: Contribute
+   :caption: Codebase
    :maxdepth: 2
 
    contribute
+   changelog
    GitHub <https://github.com/HariboDev/aws-ec2-profiles>
    NPM <https://www.npmjs.com/package/@haribodev/aws-ec2-profiles>

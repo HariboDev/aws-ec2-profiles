@@ -14,7 +14,7 @@ The configure command can be ran by executing the following:
 This command is automatically ran after installing the package using
 NPM.
 
-:Note:
+.. note::
   It is recommended that this command be manually re-ran if any of
   the data files become corrupt or the package functionality does not
   run as expected.

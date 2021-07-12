@@ -10,7 +10,7 @@ instance index, name or address. This command also has the ability to
 override the username, private key, private key directory and password
 that will be used in the SSH connection handshake.
 
-:Note:
+.. note::
   Index for accounts begin at 0, not 1.
 
 The connect command follows the following format:
@@ -19,7 +19,7 @@ The connect command follows the following format:
 
   $ aep connect [OPTIONS]
 
-:Note:
+.. note::
   It is recommended that you run the :doc:`🏷️ List <list>` command to
   ensure you are passing in the correct instance details when attempting
   to connect to the EC2 instance.
