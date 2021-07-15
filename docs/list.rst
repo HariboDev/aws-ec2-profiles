@@ -6,8 +6,11 @@ Description
 ===========
 
 This command gathers all EC2 instances from all regions (customisable)
-and from all accounts registered with the CLI tool (customisable). Summaries
-of this data is then displayed in a table within the console.
+and from all accounts registered with the CLI tool (customisable). Self
+managed instances will also appear. AWS and self managed instances will
+be checked for SSH connectivity to determine if they are accessible.
+This and other information is summarised and displayed in a table
+within the console.
 
 The list command follows the following format:
 
@@ -24,13 +27,6 @@ Options
   * Description: Only get instances from a specific account(s)
   * Default: ``all``
   * Example: ``$ aep list --account Personal Work Sandbox``
-
-* ``--detail | -d``
-
-  * Type: ``boolean``
-  * Description: Show extra instance details
-  * Default: ``false``
-  * Example: ``$ aep list --detail``
 
 * ``--region | -r``
 
@@ -56,6 +52,16 @@ Options
     * ``sa-east-1``
   * Example: ``$ aep list --region eu-west-1 eu-west-2``
 
+* ``--managed`` | ``-m``
+
+  * Type: ``string[]``
+  * Description: Only list instances under a specific management(s)
+  * Default: ``all``
+  * Options:
+    * ``aws``
+    * ``self``
+  * Example: ``$ aep list --managed aws``
+
 * ``--state | -s``
 
   * Type: ``string[]``
@@ -69,6 +75,12 @@ Options
     * ``shutting-down``
     * ``terminated``
   * Example: ``$ aep list --state pending running``
+
+.. note::
+  When gathering AWS and self managed instances, the CLI will then check if the
+  servers are accessible on port ``22`` automatically. This will then be displayed
+  in the outputted table.
+
 
 Examples
 ========
@@ -87,20 +99,20 @@ Examples
     [INFO] Checking account: Work
     [INFO] Checking region: eu-west-1
     [INFO] Checking region: eu-north-1
-    ┌───────┬─────────────────┬─────────────────┬──────────────────┬───────────────┬─────────┬────────────┐
-    │ Index │ Name            │ Address         │ Key Pair         │ Username      │ State   │ Accessible │
-    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┤
-    │ 0     │ example_server  │ 123.456.789.123 │ example_key.pem  │ example_user  │ running │ true       │
-    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┤
-    │ 1     │ example_server2 │ 987.654.321.987 │ example_key2.pem │ example_user2 │ stopped │ false      │
-    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┤
-    │ 2     │ example_server3 │ 456.789.123.456 │ example_key3.pem │ example_user3 │ pending │ true       │
-    └───────┴─────────────────┴─────────────────┴──────────────────┴───────────────┴─────────┴────────────┘
+    ┌───────┬─────────────────┬─────────────────┬──────────────────┬───────────────┬─────────┬────────────┬────────────┬──────────┬────────────┐
+    │ Index │ Name            │ Address         │ Key Pair         │ Username      │ State   │ Accessible │ Region     │ Account  │ Managed By │
+    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┼──────────┼────────────┤
+    │ 0     │ example_server  │ 123.456.789.123 │ example_key.pem  │ example_user  │ running │ true       │ eu-west-1  │ Personal │ AWS        │
+    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┤──────────┼────────────┤
+    │ 1     │ example_server2 │ 987.654.321.987 │ example_key2.pem │ example_user2 │ stopped │ false      │ eu-west-1  │ Personal │ AWS        │
+    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┤──────────┼────────────┤
+    │ 2     │ example_server3 │ 456.789.123.456 │ example_key3.pem │ example_user3 │ unknown │ true       │ N/A        │ N/A      │ Self       │
+    └───────┴─────────────────┴─────────────────┴──────────────────┴───────────────┴─────────┴────────────┴────────────┴──────────┴────────────┘
 
 
 * The example below shows the CLI tool being used to list all EC2
-  instances in the account: ``Personal`` with the ``--detail`` flag
-  to see more information about the instances.
+  instances in the account: ``Personal`` with the ``--managed`` flag
+  set to ``aws`` to ignore any self managed instances.
 
   .. code:: console
 
@@ -123,13 +135,13 @@ Examples
     [INFO] Checking region: eu-west-3
     [INFO] Checking region: eu-north-1
     [INFO] Checking region: sa-east-1
-    ┌───────┬─────────────────┬─────────────────┬──────────────────┬───────────────┬─────────┬────────────┬────────────┬──────────┐
-    │ Index │ Name            │ Address         │ Key Pair         │ Username      │ State   │ Accessible │ Region     │ Account  │
-    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┼──────────┤
-    │ 0     │ example_server  │ 123.456.789.123 │ example_key.pem  │ example_user  │ running │ true       │ eu-west-1  │ Personal │
-    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┤──────────┤
-    │ 1     │ example_server2 │ 987.654.321.987 │ example_key2.pem │ example_user2 │ stopped │ false      │ eu-north-1 │ Personal │
-    └───────┴─────────────────┴─────────────────┴──────────────────┴───────────────┴─────────┴────────────┴────────────┴──────────┘
+    ┌───────┬─────────────────┬─────────────────┬──────────────────┬───────────────┬─────────┬────────────┬────────────┬──────────┬────────────┐
+    │ Index │ Name            │ Address         │ Key Pair         │ Username      │ State   │ Accessible │ Region     │ Account  │ Managed By │
+    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┼──────────┼────────────┤
+    │ 0     │ example_server  │ 123.456.789.123 │ example_key.pem  │ example_user  │ running │ true       │ eu-west-1  │ Personal │ AWS        │
+    ├───────┼─────────────────┼─────────────────┼──────────────────┼───────────────┼─────────┼────────────┼────────────┤──────────┼────────────┤
+    │ 1     │ example_server2 │ 987.654.321.987 │ example_key2.pem │ example_user2 │ stopped │ false      │ eu-north-1 │ Personal │ AWS        │
+    └───────┴─────────────────┴─────────────────┴──────────────────┴───────────────┴─────────┴────────────┴────────────┴──────────┴────────────┘
 
 * This example shows the CLI tool being used to list all EC2
   instances in the region: ``eu-west-1`` and only in the states:

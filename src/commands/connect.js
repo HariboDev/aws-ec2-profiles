@@ -17,24 +17,48 @@ class ConnectCommand extends Command {
 
         var instanceToConnect = undefined
 
-        if (flags.index) {
-            instanceToConnect = instancesData[flags.index]
+        if (flags.index || flags.index === 0) {
+            if (flags.index <= instancesData.awsManaged.length - 1) {
+                instanceToConnect = instancesData.awsManaged[flags.index]
+            } else {
+                instanceToConnect = instancesData.selfManaged[flags.index - instancesData.selfManaged.length]
+            }
         } else if (flags.name) {
             var instanceIndex = -1
-            instancesData.map((instance, index) => {
+            instancesData.awsManaged.map((instance, index) => {
                 if (instance['Name'] == flags.name) {
                     instanceIndex = index
                 }
             })
-            instanceToConnect = instancesData[instanceIndex]
+
+            if (instanceIndex === -1) {
+                instancesData.selfManaged.map((instance, index) => {
+                    if (instance['Name'] == flags.name) {
+                        instanceIndex = index
+                    }
+                })
+                instanceToConnect = instancesData.selfManaged[instanceIndex]
+            } else {
+                instanceToConnect = instancesData.awsManaged[instanceIndex]
+            }
         } else if (flags.address) {
             var instanceIndex = -1
-            instancesData.map((instance, index) => {
+            instancesData.awsManaged.map((instance, index) => {
                 if (instance['Address'] == flags.address) {
                     instanceIndex = index
                 }
             })
-            instanceToConnect = instancesData[instanceIndex]
+
+            if (instanceIndex === -1) {
+                instancesData.selfManaged.map((instance, index) => {
+                    if (instance['Address'] == flags.address) {
+                        instanceIndex = index
+                    }
+                })
+                instanceToConnect = instancesData.selfManaged[instanceIndex]
+            } else {
+                instanceToConnect = instancesData.awsManaged[instanceIndex]
+            }
         }
 
         if (instanceToConnect == undefined) {
@@ -50,7 +74,7 @@ class ConnectCommand extends Command {
                 username = instanceToConnect['Username']
             }
 
-            if (flags.password) {
+            if (flags.password || instanceToConnect['Key Pair'] === 'N/A') {
                 var password = await cli.prompt(`Enter password for ${username}@${instanceToConnect['Address']}:22`, { required: true, type: 'hide' })
             } else {
                 var directory
@@ -58,7 +82,7 @@ class ConnectCommand extends Command {
                 if (flags.directory) {
                     directory = flags.directory
                 } else {
-                    directory = '~/' + configData['pem Directory']
+                    directory = configData['pem Directory']
                 }
 
                 var key
@@ -89,7 +113,6 @@ class ConnectCommand extends Command {
 
         if (validFileExtensions.includes(filepath.slice(-4))) {
             if (fs.existsSync(filepath)) {
-                console.log(filepath)
                 return filepath
             }
         } else {
@@ -110,7 +133,7 @@ Connect to an EC2 instance using either the instance index, name or address.\nAb
 `
 
 ConnectCommand.flags = {
-    index: flags.string({ char: 'i', description: 'Instance index' }),
+    index: flags.integer({ char: 'i', description: 'Instance index' }),
     name: flags.string({ char: 'n', description: 'Instance name' }),
     address: flags.string({ char: 'a', description: 'Instance Address' }),
     username: flags.string({ char: 'u', description: 'Override connection username' }),

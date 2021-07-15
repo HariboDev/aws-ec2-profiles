@@ -5,10 +5,10 @@
 Description
 ===========
 
-This command allows you to connect to an EC2 instance using either the
-instance index, name or address. This command also has the ability to
-override the username, private key, private key directory and password
-that will be used in the SSH connection handshake.
+This command allows you to connect to an AWS or self managed instance
+using either the instance index, name or address. This command also has
+the ability to override the username, private key, private key directory
+and password that will be used in the SSH connection handshake.
 
 .. note::
   Index for accounts begin at 0, not 1.

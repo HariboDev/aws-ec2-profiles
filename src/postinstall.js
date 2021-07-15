@@ -3,11 +3,11 @@ const chalk = require('chalk')
 const ConfigureCommand = require('./commands/configure')
 
 async function Configure() {
-    await ConfigureCommand.run()
+    // await ConfigureCommand.run()
 
     const table = new Table({
         head: [
-            chalk.green('Wagwan!\nThanks for downloading @haribodev/aws-ec2-profiles\nRun \'aep list\' to retrieve all EC2 instances!')
+            chalk.green('Wagwan!\nThanks for downloading @haribodev/aws-ec2-profiles\nRun \'aep accounts add\' to register an AWS account\nwith the CLI or \'aep servers add\' to register a\nself managed server with the CLI!')
         ]
     })
 

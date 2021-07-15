@@ -12,7 +12,6 @@ class ListCommand extends Command {
         try {
             instancesData = await Get(flags, this.config)
         } catch (error) {
-            console.log(`${chalk.red('[ERROR]')} Unable to locate config file`)
             console.log(`${chalk.red('[REASON]')} ${error}`)
             return
         }
@@ -25,62 +24,91 @@ class ListCommand extends Command {
                 chalk.blueBright("Key Pair"),
                 chalk.blueBright("Username"),
                 chalk.blueBright('State'),
-                chalk.blueBright('Accessible')
+                chalk.blueBright('Accessible'),
+                chalk.blueBright('Location'),
+                chalk.blueBright('Account'),
+                chalk.blueBright('Managed By')
             ]
         })
 
-        if (flags.detail) {
-            table.options.head.push(chalk.blueBright('Region'))
-            table.options.head.push(chalk.blueBright('Account'))
+        var managementChoice = []
+
+        if (flags.managed === 'all') {
+            managementChoice.push('awsManaged')
+            managementChoice.push('selfManaged')
+        } else {
+            if (flags.managed.includes('aws')) {
+                managementChoice.push('awsManaged')
+            }
+
+            if (flags.managed.includes('self')) {
+                managementChoice.push('selfManaged')
+            }
         }
 
-        instancesData.map((instance, index) => {
-            table.push([
-                index,
-                (instance['Name'] == "N/A" ?
-                    chalk.grey(`${instance['Name']}`)
-                    :
-                    chalk.white(`${instance['Name']}`)
-                ),
-                (instance['Address'] == "N/A" ?
-                    chalk.grey(`${instance['Address']}`)
-                    :
-                    chalk.white(`${instance['Address']}`)
-                ),
-                (instance['Key Pair'] == "N/A" ?
-                    chalk.grey(`${instance['Key Pair']}`)
-                    :
-                    chalk.white(`${instance['Key Pair']}`)
-                ),
-                (instance['Username'] == "N/A" ?
-                    chalk.grey(`${instance['Username']}`)
-                    :
-                    chalk.white(`${instance['Username']}`)
-                ),
-                (instance['State'] == 'running' ?
-                    chalk.green(`${instance['State']}`)
-                    :
-                    (instance['State'] == 'stopping' || instance['State'] == 'pending' ?
-                        chalk.yellow(`${instance['State']}`)
+        managementChoice.map(managed => {
+            instancesData[managed].map((instance, index) => {
+                table.push([
+                    (managed === "awsManaged" ? index : index + instancesData[managed].length),
+                    (instance['Name'] == "N/A" ?
+                        chalk.grey(`${instance['Name']}`)
                         :
-                        chalk.red(`${instance['State']}`)
-                    )
-                ),
-                (instance['Accessible'] == true ?
-                    chalk.green(`${instance['Accessible']}`)
-                    :
-                    (instance['Accessible'] == false ?
-                        chalk.red(`${instance['Accessible']}`)
+                        chalk.white(`${instance['Name']}`)
+                    ),
+                    (instance['Address'] == "N/A" ?
+                        chalk.grey(`${instance['Address']}`)
                         :
-                        chalk.white(`${instance['Accessible']}`)
+                        chalk.white(`${instance['Address']}`)
+                    ),
+                    (instance['Key Pair'] == "N/A" ?
+                        chalk.grey(`${instance['Key Pair']}`)
+                        :
+                        chalk.white(`${instance['Key Pair']}`)
+                    ),
+                    (instance['Username'] == "N/A" ?
+                        chalk.grey(`${instance['Username']}`)
+                        :
+                        chalk.white(`${instance['Username']}`)
+                    ),
+                    (instance['State'] == 'running' ?
+                        chalk.green(`${instance['State']}`)
+                        :
+                        (instance['State'] == 'stopping' || instance['State'] == 'pending' ?
+                            chalk.yellow(`${instance['State']}`)
+                            :
+                            (instance['State'] == 'unknown' ?
+                                chalk.grey(`${instance['State']}`)
+                                :
+                                chalk.red(`${instance['State']}`)
+                            )
+                        )
+                    ),
+                    (instance['Accessible'] == true ?
+                        chalk.green(`${instance['Accessible']}`)
+                        :
+                        (instance['Accessible'] == false ?
+                            chalk.red(`${instance['Accessible']}`)
+                            :
+                            chalk.white(`${instance['Accessible']}`)
+                        )
+                    ),
+                    (instance['Location'] == 'N/A' ?
+                        chalk.grey(`${instance['Location']}`)
+                        :
+                        chalk.white(`${instance['Location']}`)
+                    ),
+                    (instance['Account'] == 'N/A' ?
+                        chalk.grey(`${instance['Account']}`)
+                        :
+                        chalk.white(`${instance['Account']}`)
+                    ),
+                    (managed == "awsManaged" ?
+                        chalk.white(`AWS`)
+                        :
+                        chalk.white(`Self`)
                     )
-                )
-            ])
-
-            if (flags.detail) {
-               table[index].push(instance['Region'])
-               table[index].push(instance['Account'])
-            }
+                ])
+            })
         })
 
         console.log(table.toString())
@@ -130,16 +158,21 @@ ListCommand.flags = {
             'terminated'
         ]
     }),
-    detail: flags.boolean({
-        char: 'd',
-        description: 'Show extra instance details',
-        default: false,
-    }),
     account: flags.string({
         char: 'a',
         description: 'Only get instances from a specific account(s)',
         multiple: true,
         default: 'all'
+    }),
+    managed: flags.string({
+        char: 'm',
+        description: 'Only get instances under a specific management(s)',
+        multiple: true,
+        default: 'all',
+        options: [
+            'aws',
+            'self'
+        ]
     })
 }
 

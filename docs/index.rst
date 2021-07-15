@@ -20,6 +20,7 @@
    accounts
    connect
    list
+   servers
    update
 
 .. toctree::

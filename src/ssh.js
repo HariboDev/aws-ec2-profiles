@@ -31,7 +31,10 @@ async function SSH(host, username, privateKey, password) {
       })
     } catch (error) {
       if (error.message === "All configured authentication methods failed") {
-        console.log(`${chalk.red('[ERROR]')} Invalid private key`)
+        console.log(`${chalk.red('[ERROR]')} Invalid username or private key`)
+        return
+      } else if (error.message === "Timed out while waiting for handshake") {
+        console.log(`${chalk.red('[ERROR]')} Timed out while waiting for handshake`)
         return
       }
     }

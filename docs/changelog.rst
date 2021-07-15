@@ -11,7 +11,41 @@ is based on `Keep a Changelog`_ and this project adheres to `Semantec Versioning
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantec Versioning: https://semver.org/
 
-v2.0.0 - 2021-07-10 [:latest:`LATEST`]
+v3.0.0 - 2021-07-15 [:latest:`LATEST`]
+==============================================
+
+Added
+-----
+
+- Add, remove and edit self managed servers with *Is port 22 open?* check
+- Added *Is port 22 open?* check every time the list command is run
+- SSH capability to self managed servers
+- Added ``Managed By`` column onto list table with values of ``AWS`` or ``Self``
+- Added ``managed`` or ``-m`` flags to list command to filter for ``aws`` or ``self`` managed instances
+
+
+Changed
+-------
+
+- Updated CLI description
+- Updated error messages when an SSH connection fails
+- Updated info messages on the list command
+- Updated welcome message for ``postinstall`` hook
+
+
+Removed
+-------
+
+- Detail flag from list command, will now list all attributes regardless
+
+
+Fixed
+-----
+
+- Account filtering with ``--account`` or ``-a`` flag on the list command not working
+
+
+v2.0.0 - 2021-07-10
 ==============================================
 
 Added

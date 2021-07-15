@@ -155,7 +155,7 @@ AccountsCommand.flags = {
 AccountsCommand.args = [
     {
         name: 'action',
-        description: 'Add, remove or modify an account',
+        description: 'Add, remove or edit an account',
         options: [
             'add',
             'remove',

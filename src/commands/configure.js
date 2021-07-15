@@ -59,7 +59,7 @@ class ConfigureCommand extends Command {
 
         var newConfigData = {}
 
-        newConfigData['pem Directory'] = await cli.prompt(`Default .pem directory [${path.join(process.env.HOME, "/.ssh")}]`, { required: false }) || path.join(process.env.HOME, "/.ssh")
+        newConfigData['pem Directory'] = await cli.prompt(`Default .pem directory [~/.ssh]`, { required: false }) || "~/.ssh"
 
         try {
             fs.writeFileSync(path.join(this.config.configDir, 'config.json'), JSON.stringify(newConfigData))
