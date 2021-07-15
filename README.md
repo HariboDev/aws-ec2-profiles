@@ -17,7 +17,7 @@ $ npm install -g @haribodev/aws-ec2-profiles
 $ aep COMMAND
 running command...
 $ aep (-v|--version|version)
-@haribodev/aws-ec2-profiles/2.0.0 win32-x64 node-v14.17.3
+@haribodev/aws-ec2-profiles/3.0.0 win32-x64 node-v14.17.3
 $ aep --help [COMMAND]
 USAGE
   $ aep COMMAND
@@ -32,6 +32,7 @@ USAGE
 * [`aep connect`](#aep-connect)
 * [`aep help [COMMAND]`](#aep-help-command)
 * [`aep list`](#aep-list)
+* [`aep servers [ACTION]`](#aep-servers-action)
 * [`aep update`](#aep-update)
 
 ## `aep accounts [ACTION]`
@@ -43,7 +44,7 @@ USAGE
   $ aep accounts [ACTION]
 
 ARGUMENTS
-  ACTION  (add|remove|edit) Add, remove or modify an account
+  ACTION  (add|remove|edit) Add, remove or edit an account
 
 OPTIONS
   -d, --detail  Show extra account details
@@ -52,7 +53,7 @@ DESCRIPTION
   Display registered AWS accounts
 ```
 
-_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v2.0.0/src\commands\accounts.js)_
+_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\accounts.js)_
 
 ## `aep configure`
 
@@ -66,7 +67,7 @@ DESCRIPTION
   Add accounts and customise the CLI tool. This command should be used after package updates.
 ```
 
-_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v2.0.0/src\commands\configure.js)_
+_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\configure.js)_
 
 ## `aep connect`
 
@@ -90,7 +91,7 @@ DESCRIPTION
   Ability to override username and/or pem directory
 ```
 
-_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v2.0.0/src\commands\connect.js)_
+_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\connect.js)_
 
 ## `aep help [COMMAND]`
 
@@ -121,8 +122,8 @@ OPTIONS
   -a, --account=account
       [default: all] Only get instances from a specific account(s)
 
-  -d, --detail
-      Show extra instance details
+  -m, --managed=aws|self
+      [default: all] Only get instances under a specific management(s)
 
   -r, 
   --region=us-east-1|us-east-2|us-west-1|us-west-2|ap-south-1|ap-northeast-1|ap-northeast-2|ap-southeast-1|ap-southeast-
@@ -136,7 +137,24 @@ DESCRIPTION
   Gathers up to date EC2 instance data and displays summaries in a table
 ```
 
-_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v2.0.0/src\commands\list.js)_
+_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\list.js)_
+
+## `aep servers [ACTION]`
+
+Register and degregister self managed servers
+
+```
+USAGE
+  $ aep servers [ACTION]
+
+ARGUMENTS
+  ACTION  (add|remove|edit) Add, remove or edit a self managed server
+
+DESCRIPTION
+  Register and degregister self managed servers
+```
+
+_See code: [src\commands\servers.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\servers.js)_
 
 ## `aep update`
 
@@ -159,5 +177,5 @@ DESCRIPTION
   Checks if your public IP has changed and updates relevant AWS security groups
 ```
 
-_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v2.0.0/src\commands\update.js)_
+_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.0.0/src\commands\update.js)_
 <!-- commandsstop -->
