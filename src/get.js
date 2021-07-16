@@ -76,11 +76,48 @@ function Get(flags, config) {
                     for (let region of flags.region) {
                         console.log(`${chalk.green('[INFO]')} Checking region: ${region}`)
 
-                        var ec2 = new AWS.EC2({
-                            accessKeyId: account.awsAccessKey,
-                            secretAccessKey: account.awsSecretAccessKey,
-                            region: region
-                        })
+                        var roleCredentials
+
+                        if ("awsRole" in account) {
+                            var stsParams = {
+                                RoleArn: account.awsRole,
+                                RoleSessionName: "aws-ec2-profiles"
+                            }
+
+                            var sts = new AWS.STS({
+                                accessKeyId: account.accessKeyId,
+                                secretAccessKey: account.secretAccessKey,
+                                region: region
+                            })
+                            roleCredentials = await sts.assumeRole(stsParams, (err, data) => {
+                                if (err) {
+                                    console.log(err)
+                                    return
+                                } else {
+                                    return data
+                                }
+                            }).promise()
+
+                            if (!roleCredentials) {
+                                console.log(`${chalk.red('ERROR')} Unable to get role credentials for ${region}`)
+                                continue
+                            }
+                        }
+
+                        if ("awsRole" in account && roleCredentials) {
+                            var ec2 = new AWS.EC2({
+                                accessKeyId: roleCredentials.Credentials.AccessKeyId,
+                                secretAccessKey: roleCredentials.Credentials.SecretAccessKey,
+                                sessionToken: roleCredentials.Credentials.SessionToken,
+                                region: region,
+                            })
+                        } else {
+                            var ec2 = new AWS.EC2({
+                                accessKeyId: account.awsAccessKey,
+                                secretAccessKey: account.awsSecretAccessKey,
+                                region: region
+                            })
+                        }
 
                         try {
                             await ec2.describeInstances(params).promise()
@@ -177,7 +214,7 @@ function Get(flags, config) {
             }
         }
 
-        
+
         await Promise.all(selfManagedInstances.map(async instance => {
             var instanceData = {
                 'Name': instance['Name'],

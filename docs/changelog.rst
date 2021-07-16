@@ -11,7 +11,23 @@ is based on `Keep a Changelog`_ and this project adheres to `Semantec Versioning
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantec Versioning: https://semver.org/
 
-v3.0.0 - 2021-07-15 [:latest:`LATEST`]
+v3.1.0 - 2021-07-16 [:latest:`LATEST`]
+==============================================
+
+Added
+-----
+
+- Ability to use internal and cross account roles in order to communicate with AWS
+- Added role column in table from the accounts command
+
+
+Changed
+-------
+
+- Updated CLI description
+
+
+v3.0.0 - 2021-07-15
 ==============================================
 
 Added

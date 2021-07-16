@@ -22,11 +22,17 @@ class AccountsCommand extends Command {
         }
 
         if (args.action == "add") {
-            configData.accountCredentials.push({
+            var newAccount = {
                 awsAccountName: await cli.prompt('AWS Account Name'),
                 awsAccessKey: await cli.prompt('AWS Access Key'),
                 awsSecretAccessKey: await cli.prompt('AWS Secret Access Key', { type: 'mask' })
-            })
+            }
+
+            if (await cli.confirm('Do you need to assume a role? [y/n]')) {
+                newAccount['awsRole'] = await cli.prompt('Role ARN', { required: true })
+            }
+
+            configData.accountCredentials.push(newAccount)
 
             try {
                 fs.writeFileSync(path.join(this.config.configDir, 'config.json'), JSON.stringify(configData))
@@ -85,17 +91,29 @@ class AccountsCommand extends Command {
 
             var index = await getIndex()
 
-            configData.accountCredentials[index].awsAccountName = await cli.prompt(`AWS Account Name [${configData.accountCredentials[index].awsAccountName}]`, { required: true }) || configData.accountCredentials[index].awsAccountName
-            configData.accountCredentials[index].awsAccessKey = await cli.prompt(`AWS Access Key [${configData.accountCredentials[index].awsAccessKey}]`, { required: true }) || configData.accountCredentials[index].awsAccessKey
+            configData.accountCredentials[index].awsAccountName = await cli.prompt(`AWS Account Name [${configData.accountCredentials[index].awsAccountName}]`, { required: false }) || configData.accountCredentials[index].awsAccountName
+            configData.accountCredentials[index].awsAccessKey = await cli.prompt(`AWS Access Key [${configData.accountCredentials[index].awsAccessKey}]`, { required: false }) || configData.accountCredentials[index].awsAccessKey
 
             var secret = configData.accountCredentials[index].awsSecretAccessKey
 
             if (flags.detail) {
-                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${secret}]`, { required: true, type: 'mask' }) || secret
+                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${secret}]`, { required: false, type: 'mask' }) || secret
             } else {
                 var mask = secret.substring(0, secret.length - 4).replace(/./g, "*")
                 var lastFour = secret.substring(secret.length - 4, secret.length)
-                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${mask + lastFour}]`, { required: true, type: 'mask' }) || secret
+                configData.accountCredentials[index].awsSecretAccessKey = await cli.prompt(`AWS Secret Access Key [${mask + lastFour}]`, { required: false, type: 'mask' }) || secret
+            }
+
+            if (await cli.confirm('Do you need to assume a role? [y/n]')) {
+                var role = await cli.prompt(`Role ARN [${configData.accountCredentials[index]["awsRole"] || 'None'}]`, { required: false }) || configData.accountCredentials[index]["awsRole"] || "None"
+
+                if (role && role.toLowerCase() !== "none") {
+                    configData.accountCredentials[index]["awsRole"] = role
+                }
+            } else {
+                if ("awsRole" in configData.accountCredentials[index]) {
+                    delete configData.accountCredentials[index]["awsRole"]
+                }
             }
 
             try {
@@ -114,7 +132,8 @@ class AccountsCommand extends Command {
                 chalk.blueBright('Index'),
                 chalk.blueBright('Account Name'),
                 chalk.blueBright('Access Key'),
-                chalk.blueBright("Secret Access Key")
+                chalk.blueBright('Secret Access Key'),
+                chalk.blueBright('Role ARN')
             ]
         })
 
@@ -133,6 +152,12 @@ class AccountsCommand extends Command {
                 var mask = secret.substring(0, secret.length - 4).replace(/./g, "*")
                 var lastFour = secret.substring(secret.length - 4, secret.length)
                 table[index].push(mask + lastFour)
+            }
+
+            if (account['awsRole']) {
+                table[index].push(`${chalk.white(account['awsRole'])}`)
+            } else {
+                table[index].push(`${chalk.grey('N/A')}`)
             }
         })
 

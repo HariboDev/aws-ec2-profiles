@@ -6,7 +6,7 @@ Description
 ===========
 
 This command allows you to view, register, modify and deregister accounts
-to the CLI.
+to the CLI. Internal and cross account roles can also be assumed.
 
 The accounts command follows the following format:
 
@@ -71,6 +71,21 @@ At this point, you will be prompted to enter:
     by AWS.
   * Example: ``wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY``
 
+* Do you need to assume a role? [y/n]
+
+  * Type: ``boolean``
+  * Required: ``true``
+  * Description: Do you need to assume a role in order to retrieve EC2 instances.
+  * Example: ``y`` or ``n``
+
+* Role ARN
+
+  * Type: ``string``
+  * Required: ``true``
+  * Description: If you answered yes to the previous question, enter the role ARN
+    you need to use. This role can be an internal or cross account role.
+  * Example: ``arn:aws:iam::123456789012:role/Example_Role``
+
 These credentials will then be saved and a summary of all accounts registered
 with the CLI will be displayed.
 
@@ -93,12 +108,14 @@ Example
   AWS Account Name: Personal
   AWS Access Key: AKIAIOSFODNN7EXAMPLE
   AWS Secret Access Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  Do you need to assume a role? [y/n]: y
+  Role ARN: arn:aws:iam::123456789012:role/Example_Role
   [INFO] Successfully saved config data
-  ┌───────┬──────────────┬──────────────────────┬──────────────────────────────────────────┐
-  │ Index │ Account Name │ Access Key           │ Secret Access Key                        │
-  ├───────┼──────────────┼──────────────────────┼──────────────────────────────────────────┤
-  │ 0     │ Personal     │ AKIAIOSFODNN7EXAMPLE │ ************************************EKEY │
-  └───────┴──────────────┴──────────────────────┴──────────────────────────────────────────┘
+  ┌───────┬──────────────┬──────────────────────┬──────────────────────────────────────────┬─────────────────────────────────────────────┐
+  │ Index │ Account Name │ Access Key           │ Secret Access Key                        │ Role ARN                                    │
+  ├───────┼──────────────┼──────────────────────┼──────────────────────────────────────────┼─────────────────────────────────────────────┤
+  │ 0     │ Personal     │ AKIAIOSFODNN7EXAMPLE │ ************************************EKEY │ arn:aws:iam::123456789012:role/Example_Role │
+  └───────┴──────────────┴──────────────────────┴──────────────────────────────────────────┴─────────────────────────────────────────────┘
 
 Edit
 ----
@@ -143,6 +160,22 @@ You will then be prompted to enter an updated:
     by AWS.
   * Example: ``wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY``
 
+* Do you need to assume a role? [y/n]
+
+  * Type: ``boolean``
+  * Required: ``true``
+  * Description: Do you need to assume a role in order to retrieve EC2 instances.
+  * Example: ``y`` or ``n``
+
+* Role ARN
+
+  * Type: ``string``
+  * Required: ``true``
+  * Description: If you answered yes to the previous question, enter the role ARN
+    you need to use. This role can be an internal or cross account role.
+  * Example: ``arn:aws:iam::123456789012:role/Example_Role``
+
+
 .. note::
   If you press enter while editing a certain field, the value will not change.
   Instead, the existing value will be used.
@@ -172,12 +205,14 @@ Example
   AWS Account Name [Personal]: Work
   AWS Access Key [AKIAIOSFODNN7EXAMPLE]:
   AWS Secret Access Key [************************************EKEY]:
+  Do you need to assume a role? [y/n]: y
+  Role ARN [arn:aws:iam::123456789012:role/Example_Role]:
   [INFO] Successfully saved config data
-  ┌───────┬──────────────┬──────────────────────┬──────────────────────────────────────────┐
-  │ Index │ Account Name │ Access Key           │ Secret Access Key                        │
-  ├───────┼──────────────┼──────────────────────┼──────────────────────────────────────────┤
-  │ 0     │ Work         │ AKIAIOSFODNN7EXAMPLE │ ************************************EKEY │
-  └───────┴──────────────┴──────────────────────┴──────────────────────────────────────────┘
+  ┌───────┬──────────────┬──────────────────────┬──────────────────────────────────────────┬─────────────────────────────────────────────┐
+  │ Index │ Account Name │ Access Key           │ Secret Access Key                        │ Role ARN                                    │
+  ├───────┼──────────────┼──────────────────────┼──────────────────────────────────────────┼─────────────────────────────────────────────┤
+  │ 0     │ Work         │ AKIAIOSFODNN7EXAMPLE │ ************************************EKEY │ arn:aws:iam::123456789012:role/Example_Role │
+  └───────┴──────────────┴──────────────────────┴──────────────────────────────────────────┴─────────────────────────────────────────────┘
 
 
 Remove
@@ -218,6 +253,6 @@ Example
   [ERROR] Invalid index
   Account index to remove: 0
   [INFO] Successfully saved config data
-  ┌───────┬──────────────┬────────────┬───────────────────┐
-  │ Index │ Account Name │ Access Key │ Secret Access Key │
-  └───────┴──────────────┴────────────┴───────────────────┘
+  ┌───────┬──────────────┬────────────┬───────────────────┬──────────┐
+  │ Index │ Account Name │ Access Key │ Secret Access Key │ Role ARN │
+  └───────┴──────────────┴────────────┴───────────────────┴──────────┘
