@@ -17,7 +17,7 @@ $ npm install -g @haribodev/aws-ec2-profiles
 $ aep COMMAND
 running command...
 $ aep (-v|--version|version)
-@haribodev/aws-ec2-profiles/3.1.0 win32-x64 node-v14.17.3
+@haribodev/aws-ec2-profiles/3.1.1 win32-x64 node-v14.17.3
 $ aep --help [COMMAND]
 USAGE
   $ aep COMMAND
@@ -53,7 +53,7 @@ DESCRIPTION
   Display registered AWS accounts
 ```
 
-_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\accounts.js)_
+_See code: [src\commands\accounts.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\accounts.js)_
 
 ## `aep configure`
 
@@ -67,7 +67,7 @@ DESCRIPTION
   Add accounts and customise the CLI tool. This command should be used after package updates.
 ```
 
-_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\configure.js)_
+_See code: [src\commands\configure.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\configure.js)_
 
 ## `aep connect`
 
@@ -91,7 +91,7 @@ DESCRIPTION
   Ability to override username and/or pem directory
 ```
 
-_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\connect.js)_
+_See code: [src\commands\connect.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\connect.js)_
 
 ## `aep help [COMMAND]`
 
@@ -137,7 +137,7 @@ DESCRIPTION
   Gathers up to date EC2 instance data and displays summaries in a table
 ```
 
-_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\list.js)_
+_See code: [src\commands\list.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\list.js)_
 
 ## `aep servers [ACTION]`
 
@@ -154,7 +154,7 @@ DESCRIPTION
   Register and degregister self managed servers
 ```
 
-_See code: [src\commands\servers.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\servers.js)_
+_See code: [src\commands\servers.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\servers.js)_
 
 ## `aep update`
 
@@ -177,5 +177,5 @@ DESCRIPTION
   Checks if your public IP has changed and updates relevant AWS security groups
 ```
 
-_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.0/src\commands\update.js)_
+_See code: [src\commands\update.js](https://github.com/HariboDev/aws-ec2-profiles/blob/v3.1.1/src\commands\update.js)_
 <!-- commandsstop -->
