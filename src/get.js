@@ -4,6 +4,7 @@ const path = require('path')
 const chalk = require('chalk')
 const publicIp = require('public-ip')
 const isPortReachable = require('is-port-reachable');
+const mockedEnv = require('mocked-env')
 
 function Get(flags, config) {
     return new Promise(async (resolve, reject) => {
@@ -84,11 +85,18 @@ function Get(flags, config) {
                                 RoleSessionName: "aws-ec2-profiles"
                             }
 
+                            var restore = mockedEnv({
+                                AWS_ACCESS_KEY_ID: account.awsAccessKey,
+                                AWS_SECRET_ACCESS_KEY: account.awsSecretAccessKey
+                            })
+
+                            var creds = new AWS.EnvironmentCredentials('AWS')
+
                             var sts = new AWS.STS({
-                                accessKeyId: account.accessKeyId,
-                                secretAccessKey: account.secretAccessKey,
+                                credentials: creds,
                                 region: region
                             })
+
                             roleCredentials = await sts.assumeRole(stsParams, (err, data) => {
                                 if (err) {
                                     console.log(err)
@@ -102,6 +110,8 @@ function Get(flags, config) {
                                 console.log(`${chalk.red('ERROR')} Unable to get role credentials for ${region}`)
                                 continue
                             }
+
+                            restore()
                         }
 
                         if ("awsRole" in account && roleCredentials) {
