@@ -14,6 +14,21 @@ is based on `Keep a Changelog`_ and this project adheres to `Semantec Versioning
 v3.1.1 - 2021-07-16 [:latest:`LATEST`]
 ==============================================
 
+Added
+-----
+
+- Info messages when gathering AWS and self managed instances
+
+
+Fixed
+-----
+
+- Fixed index flag for self managed instances showing invalid selection
+
+
+v3.1.1 - 2021-07-16
+==============================================
+
 Fixed
 -----
 

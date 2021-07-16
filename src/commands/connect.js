@@ -21,7 +21,7 @@ class ConnectCommand extends Command {
             if (flags.index <= instancesData.awsManaged.length - 1) {
                 instanceToConnect = instancesData.awsManaged[flags.index]
             } else {
-                instanceToConnect = instancesData.selfManaged[flags.index - instancesData.selfManaged.length]
+                instanceToConnect = instancesData.selfManaged[flags.index - instancesData.awsManaged.length]
             }
         } else if (flags.name) {
             var instanceIndex = -1

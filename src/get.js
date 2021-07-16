@@ -62,6 +62,8 @@ function Get(flags, config) {
             }
 
             if (flags.managed === 'all' || flags.managed.includes('aws')) {
+                console.log(`${chalk.green('[INFO]')} Gathering AWS managed instances`)
+
                 for (let account of configData.accountCredentials) {
                     if (flags.account === "all") {
                         console.log(`${chalk.green('[INFO]')} Checking account: ${account.awsAccountName}`)
@@ -224,23 +226,28 @@ function Get(flags, config) {
             }
         }
 
-
-        await Promise.all(selfManagedInstances.map(async instance => {
-            var instanceData = {
-                'Name': instance['Name'],
-                'Address': instance['Address'],
-                'Key Pair': instance['Key Pair'],
-                'Username': instance['Username'],
-                'State': instance['State'],
-                'Accessible': instance['State'],
-                'Location': instance['Location'],
-                'Account': instance['Account']
+        if (selfManagedInstances.length > 0) {
+            if (flags.managed.includes('self') || flags.managed.includes('all')) {
+                console.log(`${chalk.green('[INFO]')} Gathering Self managed instances`)
             }
 
-            instanceData.Accessible = await isPortReachable(22, { host: instance.Address })
+            await Promise.all(selfManagedInstances.map(async instance => {
+                var instanceData = {
+                    'Name': instance['Name'],
+                    'Address': instance['Address'],
+                    'Key Pair': instance['Key Pair'],
+                    'Username': instance['Username'],
+                    'State': instance['State'],
+                    'Accessible': instance['State'],
+                    'Location': instance['Location'],
+                    'Account': instance['Account']
+                }
 
-            instancesData.selfManaged.push(instanceData)
-        }))
+                instanceData.Accessible = await isPortReachable(22, { host: instance.Address })
+
+                instancesData.selfManaged.push(instanceData)
+            }))
+        }
 
         try {
             fs.writeFileSync(path.join(config.dataDir, 'instances.json'), JSON.stringify(instancesData))

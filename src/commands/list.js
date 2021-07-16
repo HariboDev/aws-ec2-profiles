@@ -49,7 +49,7 @@ class ListCommand extends Command {
         managementChoice.map(managed => {
             instancesData[managed].map((instance, index) => {
                 table.push([
-                    (managed === "awsManaged" ? index : index + instancesData[managed].length),
+                    (managed === "awsManaged" ? index : index + instancesData["awsManaged"].length),
                     (instance['Name'] == "N/A" ?
                         chalk.grey(`${instance['Name']}`)
                         :
