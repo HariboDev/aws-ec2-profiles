@@ -1,7 +1,7 @@
 {
   "name": "@haribodev/aws-ec2-profiles",
   "description": "Centrally manage AWS and self managed instances and connect to them using SSH. Update security group ingress rules with your new public IP.",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "author": "HariboDev",
   "bin": {
     "aep": "./bin/run"
