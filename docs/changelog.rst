@@ -11,7 +11,18 @@ is based on `Keep a Changelog`_ and this project adheres to `Semantec Versioning
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantec Versioning: https://semver.org/
 
-v3.1.2 - 2021-07-16 [:latest:`LATEST`]
+v3.1.3 - 2021-12-30 [:latest:`LATEST`]
+==============================================
+
+Fixed
+-----
+
+- Fixed configure command not executing on package install
+- Fixed configure command not creating all necessary files for self managed instances
+- Fixed documentation theme version stopping GitHub actions building successfully
+
+
+v3.1.2 - 2021-07-16
 ==============================================
 
 Added

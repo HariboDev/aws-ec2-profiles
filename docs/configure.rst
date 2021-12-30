@@ -43,8 +43,8 @@ following locations:
 
 * Configuration data:
 
-  * Unix: ``~/.cache/aws-ec2-profiles/config.json``
-  * Windows: ``~/.cache/aws-ec2-profiles/config.json``
+  * Unix: ``~/.config/aws-ec2-profiles/config.json``
+  * Windows: ``~/.config/aws-ec2-profiles/config.json``
 
 Arguments
 =========

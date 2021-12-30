@@ -3,7 +3,7 @@ const chalk = require('chalk')
 const ConfigureCommand = require('./commands/configure')
 
 async function Configure() {
-    // await ConfigureCommand.run()
+    await ConfigureCommand.run()
 
     const table = new Table({
         head: [

@@ -107,6 +107,22 @@ class ConfigureCommand extends Command {
             console.log(`${chalk.red('[REASON]')} ${error}`)
             return
         }
+
+        if (!fs.existsSync(path.join(this.config.dataDir, 'instances.json'))) {
+            try {
+                let instancesData = {
+                    awsManaged: [],
+                    selfManaged: []
+                }
+
+                fs.writeFileSync(path.join(this.config.dataDir, 'instances.json'), JSON.stringify(instancesData))
+                console.log(`${chalk.green('[INFO]')} Successfully saved data to instances file`)
+            } catch (error) {
+                console.log(`${chalk.red('[ERROR]')} Unable to save data to instances file`)
+                console.log(`${chalk.red('[REASON]')} ${error}`)
+                return
+            }
+        }
     }
 }
 

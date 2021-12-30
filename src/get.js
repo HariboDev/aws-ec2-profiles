@@ -27,9 +27,10 @@ function Get(flags, config) {
             selfManagedInstances = JSON.parse(fs.readFileSync(path.join(config.dataDir, 'instances.json'))).selfManaged || []
             console.log(`${chalk.green('[INFO]')} Data file located`)
         } catch (error) {
+            selfManagedInstances = []
             console.log(`${chalk.red('[ERROR]')} Unable to locate data file`)
-            reject(error)
-            return
+            // reject(error)
+            // return
         }
 
         if (("accountCredentials" in configData)) {

@@ -13,8 +13,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout latest commit  
         if: github.repository == 'HariboDev/aws-ec2-profiles'
+        uses: actions/checkout@master
 
       - name: Download dependencies
         if: github.repository == 'HariboDev/aws-ec2-profiles'
